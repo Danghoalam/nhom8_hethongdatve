@@ -1,0 +1,1 @@
+HDSD: "Bật server.py trước, sau đó bật client.py để đặt vé".
