@@ -7,7 +7,7 @@
         {
             "id": "m1",
             "status": "now",
-            "name": "AVENGER: ENDGAME",
+            "name": "RUNNING MAN VIỆT NAM MÙA 3 - CON RỐI TỰ DO",
             "genre": "Hành động",
             "duration": "180p",
             "age": "C13",
@@ -16,7 +16,7 @@
         {
             "id": "m2",
             "status": "soon",
-            "name": "AVATAR: THE WAY OF WATER",
+            "name": "TIỂU YÊU QUÁI NÚI LÃNG LÃNG",
             "genre": "Viễn tưởng",
             "duration": "192p",
             "age": "C16",
@@ -32,17 +32,17 @@
                         "price": 150000,
                         "seats": {
                             "1": 1,
-                            "2": 0,
-                            "3": 0,
-                            "4": 0,
-                            "5": 0,
-                            "6": 0,
-                            "7": 0,
+                            "2": 1,
+                            "3": 1,
+                            "4": 1,
+                            "5": 1,
+                            "6": 1,
+                            "7": 1,
                             "8": 0,
                             "9": 0,
                             "10": 0,
                             "11": 0,
-                            "12": 0
+                            "12": 1
                         }
                     },
                     "20:00": {
@@ -94,7 +94,7 @@
                         "price": 180000,
                         "seats": {
                             "1": 0,
-                            "2": 0,
+                            "2": 1,
                             "3": 0,
                             "4": 0,
                             "5": 0,
@@ -167,6 +167,64 @@
                     "1"
                 ],
                 "total": "150,000 VND"
+            },
+            {
+                "movie": "AVENGER: ENDGAME",
+                "theater": "Cinema Quận 1",
+                "time": "18:00 (2026-02-01)",
+                "seats": [
+                    "2",
+                    "6",
+                    "5"
+                ],
+                "total": "450,000 VND"
+            },
+            {
+                "movie": "RUNNING MAN VIỆT NAM MÙA 3 - CON RỐI TỰ DO",
+                "theater": "Cinema Quận 1",
+                "time": "18:00 (2026-02-01)",
+                "seats": [
+                    "3"
+                ],
+                "total": "150.000 đ"
+            },
+            {
+                "movie": "RUNNING MAN VIỆT NAM MÙA 3 - CON RỐI TỰ DO",
+                "theater": "Cinema Tân Bình",
+                "time": "17:00 (2026-02-01)",
+                "seats": [
+                    "2"
+                ],
+                "total": "180.000 đ"
+            },
+            {
+                "movie": "RUNNING MAN VIỆT NAM MÙA 3 - CON RỐI TỰ DO",
+                "theater": "Cinema Quận 1",
+                "time": "18:00 (2026-02-01)",
+                "seats": [
+                    "12"
+                ],
+                "total": "150.000 đ"
+            }
+        ],
+        "nhom8": [
+            {
+                "movie": "RUNNING MAN VIỆT NAM MÙA 3 - CON RỐI TỰ DO",
+                "theater": "Cinema Quận 1",
+                "time": "18:00 (2026-02-01)",
+                "seats": [
+                    "4"
+                ],
+                "total": "150.000 đ"
+            },
+            {
+                "movie": "TIỂU YÊU QUÁI NÚI LÃNG LÃNG",
+                "theater": "Cinema Quận 1",
+                "time": "18:00 (2026-02-01)",
+                "seats": [
+                    "7"
+                ],
+                "total": "150.000 đ"
             }
         ]
     }

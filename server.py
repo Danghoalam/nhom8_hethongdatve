@@ -4,7 +4,9 @@ DB_FILE = 'database.json'
 clients = []
 
 def load_db():
-    with open(DB_FILE, 'r', encoding='utf-8') as f: return json.load(f)
+    try:
+        with open(DB_FILE, 'r', encoding='utf-8') as f: return json.load(f)
+    except FileNotFoundError: return {} # Tránh lỗi nếu chưa có file
 
 def save_db(data):
     with open(DB_FILE, 'w', encoding='utf-8') as f: json.dump(data, f, indent=4, ensure_ascii=False)
@@ -13,7 +15,8 @@ def broadcast_update(city, theater, day, time, seats):
     msg = json.dumps({"type": "update_seats", "city": city, "theater": theater, "day": day, "time": time, "seats": seats})
     for c in clients:
         try: c.send(msg.encode('utf-8'))
-        except: clients.remove(c)
+        except: 
+            if c in clients: clients.remove(c)
 
 def handle_client(conn, addr):
     clients.append(conn)
@@ -27,10 +30,12 @@ def handle_client(conn, addr):
 
             if req['type'] == 'login':
                 u, p = req['user'], req['pass']
-                if u in db['users'] and db['users'][u] == p:
+                if u in db.get('users', {}) and db['users'][u] == p:
                     user_now = u
-                    conn.send(json.dumps({"type": "login_ok", "movies": db['movies'], "theaters": db['theaters']}).encode('utf-8'))
-                else: conn.send(json.dumps({"type": "login_fail"}).encode('utf-8'))
+                    # Gửi thêm dữ liệu nếu cần
+                    conn.send(json.dumps({"type": "login_ok", "movies": db.get('movies', []), "theaters": db.get('theaters', {})}).encode('utf-8'))
+                else: 
+                    conn.send(json.dumps({"type": "login_fail"}).encode('utf-8'))
 
             elif req['type'] == 'get_seats':
                 c, th, d, tm = req['city'], req['theater'], req['day'], req['time']
@@ -39,25 +44,40 @@ def handle_client(conn, addr):
 
             elif req['type'] == 'book':
                 c, th, d, tm, s_list = req['city'], req['theater'], req['day'], req['time'], req['seats']
+                # Cập nhật ghế
                 target = db['theaters'][c][th][d][tm]['seats']
                 for s in s_list: target[s] = 1
+                
+                # Cập nhật lịch sử
+                if 'history' not in db: db['history'] = {}
                 if user_now not in db['history']: db['history'][user_now] = []
-                db['history'][user_now].append({"movie": req['movie'], "theater": th, "time": f"{tm} ({d})", "seats": s_list, "total": req['total']})
+                db['history'][user_now].append({
+                    "movie": req['movie'], 
+                    "theater": th, 
+                    "time": f"{tm} ({d})", 
+                    "seats": s_list, 
+                    "total": req['total']
+                })
+                
                 save_db(db)
                 conn.send(json.dumps({"type": "bill", "seats": s_list, "total": req['total']}).encode('utf-8'))
                 broadcast_update(c, th, d, tm, s_list)
 
             elif req['type'] == 'get_history':
-                h = db['history'].get(user_now, [])
+                h = db.get('history', {}).get(user_now, [])
                 conn.send(json.dumps({"type": "history_data", "data": h}).encode('utf-8'))
-        except: break
+        except Exception as e: 
+            print(f"Error: {e}")
+            break
+            
     if conn in clients: clients.remove(conn)
     conn.close()
 
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server.bind(('127.0.0.1', 65432))
-server.listen()
-print("SERVER CINEMA READY...")
-while True:
-    c, a = server.accept()
-    threading.Thread(target=handle_client, args=(c, a), daemon=True).start()
+if __name__ == "__main__":
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind(('127.0.0.1', 65432))
+    server.listen()
+    print("SERVER CINEMA READY...")
+    while True:
+        c, a = server.accept()
+        threading.Thread(target=handle_client, args=(c, a), daemon=True).start()
